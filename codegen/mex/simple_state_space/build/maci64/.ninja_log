@@ -1,0 +1,11 @@
+# ninja log v5
+2	690	1737482554383387403	build/maci64/simple_state_space_data.o	16c296110fd9d765
+2	763	1737482554458520715	build/maci64/rt_nonfinite.o	1fdf92073559be6
+5	763	1737482554458551025	build/maci64/_coder_simple_state_space_api.o	19cd16f0eb2922f0
+6	763	1737482554461772866	build/maci64/_coder_simple_state_space_mex.o	9a2ec75c23ccf089
+7	763	1737482554458546058	build/maci64/c_mexapi_version.o	510eda7a4777eb2a
+3	763	1737482554458520821	build/maci64/simple_state_space_initialize.o	be2687a43a0e9cdd
+4	763	1737482554459641044	build/maci64/simple_state_space_terminate.o	a2349238041fd554
+6	763	1737482554458579533	build/maci64/_coder_simple_state_space_info.o	ba6c60ce9a0fe073
+4	765	1737482554465408176	build/maci64/simple_state_space.o	36b7a49f112b9a93
+765	1295	1737482554984890968	simple_state_space_mex.mexmaci64	229cd1e49a7dcb24

@@ -1,0 +1,52 @@
+# CompilerName=clang
+# Mode=optim
+ninja_required_version = 1.3
+
+# Basic folders
+root = .
+builddir = $root/build/maci64
+matlabdir = /Applications/MATLAB_R2024b.app
+startdir = /Users/nithyasai/Documents/MATLAB/Examples/R2024b/control/dcdemo
+
+# Toolchain information
+cc = /usr/bin/xcrun -sdk macosx15.2 clang
+cxx = /usr/bin/xcrun -sdk macosx15.2 clang++
+linker = /usr/bin/xcrun -sdk macosx15.2 clang
+linkerxx = /usr/bin/xcrun -sdk macosx15.2 clang++
+
+cflags =  -fno-common -arch x86_64 -mmacosx-version-min=12.0 -fexceptions -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -fwrapv -ffp-contract=off  -DMATLAB_MEX_FILE -O2 -DNDEBUG -std=c99 -I "$root" -I "$startdir" -I "$root/interface" -I "$matlabdir/extern/include" -I "." -DMODEL=simple_state_space_mex -c 
+
+cxxflags =  -fno-common -arch x86_64 -mmacosx-version-min=12.0 -fexceptions -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -fwrapv -ffp-contract=off  -fobjc-arc -std=c++14 -stdlib=libc++ -DMATLAB_MEX_FILE  -O2 -DNDEBUG -std=c++11 -I "$root" -I "$startdir" -I "$root/interface" -I "$matlabdir/extern/include" -I "." -DMODEL=simple_state_space_mex -c 
+
+ldflags =  -Wl,-twolevel_namespace  -arch x86_64 -mmacosx-version-min=12.0 -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -bundle   -L"$matlabdir/bin/maci64" -weak-lmx -weak-lmex -weak-lmat -lc++  -Wl,-rpath,@loader_path -o simple_state_space_mex.mexmaci64 -lemlrt -lcovrt -lut -lmwmathutil  -Wl,-exported_symbols_list,simple_state_space.map
+
+ldxxflags =  -Wl,-twolevel_namespace  -arch x86_64 -mmacosx-version-min=12.0 -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -framework Cocoa -bundle  -stdlib=libc++ -L"$matlabdir/bin/maci64" -weak-lmx -weak-lmex -weak-lmat -L"$matlabdir/extern/bin/maci64" -weak-lMatlabDataArray  -Wl,-rpath,@loader_path -o simple_state_space_mex.mexmaci64 -lemlrt -lcovrt -lut -lmwmathutil  -Wl,-exported_symbols_list,simple_state_space.map
+
+linkobjs = 
+
+# Build Rules
+rule cc
+    command = $cc $cflags $in -o $out
+
+rule cxx
+    command = $cxx $cxxflags $in -o $out
+
+rule link
+    command = $linker $in $linkobjs $ldflags
+
+rule linkxx
+    command = $linkerxx $in $linkobjs $ldxxflags
+
+# Build
+build $builddir/simple_state_space_data.o : cc $root/simple_state_space_data.c
+build $builddir/rt_nonfinite.o : cc $root/rt_nonfinite.c
+build $builddir/simple_state_space_initialize.o : cc $root/simple_state_space_initialize.c
+build $builddir/simple_state_space_terminate.o : cc $root/simple_state_space_terminate.c
+build $builddir/simple_state_space.o : cc $root/simple_state_space.c
+build $builddir/_coder_simple_state_space_api.o : cc $root/interface/_coder_simple_state_space_api.c
+build $builddir/_coder_simple_state_space_mex.o : cc $root/interface/_coder_simple_state_space_mex.c
+build $builddir/_coder_simple_state_space_info.o : cc $root/interface/_coder_simple_state_space_info.c
+build $builddir/c_mexapi_version.o : cc $matlabdir/extern/version/c_mexapi_version.c
+
+# Link
+build $root/simple_state_space_mex.mexmaci64 : link $builddir/simple_state_space_data.o $builddir/rt_nonfinite.o $builddir/simple_state_space_initialize.o $builddir/simple_state_space_terminate.o $builddir/simple_state_space.o $builddir/_coder_simple_state_space_api.o $builddir/_coder_simple_state_space_mex.o $builddir/_coder_simple_state_space_info.o $builddir/c_mexapi_version.o 
